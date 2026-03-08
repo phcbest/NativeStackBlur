@@ -37,7 +37,16 @@ Bitmap bm = NativeStackBlur.process(source, blurRadius);
 ```
 
 # Compiling
-If you want to compile the original StackBlur lib for various reasons, such as adding more architecture support, simply pull down the original StackBlur repo, navigate to the StackBlur project folder (with the res and src folders). Delete the `x86` and other folders containing `.so` files. Also, remove the `<uses-sdk` block from the manifest. You will probably also get errors relating to LOCAL_SRC_FILES pointing to a missing file. Since we do not support Renderscript, just open up the `Android.mk` file and remove the `ifneq` block. Now, run `ndk-build`. This should output all the .so files you need within the /libs folder (ignoring the renderscript-v8.jar). This process works with commit cf19121553f50f346c48eabc7ebf04d27b074f17 of [android-stackblur](https://github.com/kikoso/android-stackblur)
+This project now builds `libblur.so` from source via CMake (`nativestackblur/src/main/cpp`).
+Native binaries are generated during normal Gradle builds.
+
+To build the library module directly:
+
+```bash
+./gradlew :nativestackblur:assemble
+```
+
+The native linker is configured with `-Wl,-z,max-page-size=16384`, so generated binaries are compatible with both 4KB and 16KB page-size Android devices.
 
 License
 --------
